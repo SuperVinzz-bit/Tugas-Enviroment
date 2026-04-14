@@ -1,0 +1,2018 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Environs – Jaga Kelestarian Alam</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --green: #2d8a4e;
+        --green-dark: #1a5c34;
+        --green-light: #4db870;
+        --accent: #5cd98a;
+        --dark: #111d15;
+        --bg: #f4f9f5;
+        --text: #1e2d24;
+        --muted: #6b8c75;
+        --white: #ffffff;
+        --card-shadow: 0 8px 32px rgba(29, 92, 52, 0.12);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        background: var(--white);
+        overflow-x: hidden;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+      }
+
+      /* ══════════════════════════════════════════
+         HEADER WRAPPER
+         - Saat awal: absolute, width 85%, tengah
+         - Saat scroll: fixed, width 100%, full
+         - Semua transisi pakai CSS transition
+      ══════════════════════════════════════════ */
+      #header-section {
+        /* Selalu fixed dari awal — tidak ada perubahan position saat scroll
+           sehingga CSS transition bisa berjalan mulus tanpa reflow */
+        position: fixed;
+        top: 0;
+        left: 7.5%; /* (100% - 85%) / 2 */
+        right: 7.5%;
+        z-index: 1000;
+
+        transition:
+          left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+          right 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+          border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      #header-section.scrolled {
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      /* ══ TOP BAR – hijau tua ══ */
+      .topbar-wrap {
+        background: var(--green-dark);
+        width: 100%;
+        transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Saat 85% → rounded top sudah dari wrapper */
+      #header-section:not(.scrolled) .topbar-wrap {
+        border-radius: 0 0 0 0; /* wrapper yang handle */
+      }
+
+      .topbar {
+        color: #cde8d6;
+        font-size: 0.78rem;
+        padding: 6px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      #header-section.scrolled .topbar {
+        padding: 6px 40px;
+      }
+
+      .topbar a {
+        color: #cde8d6;
+        margin-left: 12px;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+      .topbar a:hover {
+        color: var(--accent);
+      }
+
+      /* ══ NAVBAR – putih ══ */
+      nav {
+        background: var(--white);
+        padding: 0 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 68px;
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        transition:
+          box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.3s ease;
+      }
+
+      /* Subtle shadow saat navbar dalam kondisi scrolled */
+      #header-section.scrolled nav {
+        box-shadow: 0 2px 0 rgba(45, 138, 78, 0.08);
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--green);
+        letter-spacing: -0.5px;
+        transition: letter-spacing 0.3s ease;
+      }
+
+      #header-section.scrolled .logo {
+        letter-spacing: -0.3px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text);
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--green);
+      }
+      .nav-links .dropdown {
+        position: relative;
+      }
+      .nav-links .dropdown ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--white);
+        box-shadow: var(--card-shadow);
+        border-radius: 8px;
+        padding: 8px 0;
+        min-width: 140px;
+        list-style: none;
+        z-index: 10;
+      }
+      .nav-links .dropdown:hover ul {
+        display: block;
+      }
+      .nav-links .dropdown ul li a {
+        display: block;
+        padding: 8px 20px;
+        font-size: 0.85rem;
+      }
+      .btn-donate {
+        background: var(--green);
+        color: var(--white);
+        padding: 10px 22px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: background 0.2s;
+        white-space: nowrap;
+      }
+      .btn-donate:hover {
+        background: var(--green-dark);
+      }
+
+      /* ══ HERO CAROUSEL ══ */
+      .carousel {
+        position: relative;
+        height: 580px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Header selalu fixed, hero tetap mulai dari top:0 agar full-bleed */
+        margin-top: 0;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+      }
+      .slide.active {
+        opacity: 1;
+      }
+      .slide-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(10, 40, 20, 0.72) 0%,
+          rgba(0, 0, 0, 0.3) 100%
+        );
+        z-index: 1;
+        pointer-events: none;
+      }
+      .slide-content {
+        position: relative;
+        text-align: center;
+        color: var(--white);
+        width: min(700px, 90%);
+        z-index: 2;
+      }
+      .slide-tag {
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .slide-content h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.2rem, 5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 18px;
+      }
+      .slide-content p {
+        font-size: 1rem;
+        opacity: 0.9;
+        max-width: 520px;
+        margin: 0 auto 28px;
+      }
+      .btn-primary {
+        display: inline-block;
+        background: var(--green);
+        color: var(--white);
+        padding: 14px 36px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.25s;
+      }
+      .btn-primary:hover {
+        background: var(--green-dark);
+        transform: translateY(-2px);
+      }
+      .btn-outline {
+        display: inline-block;
+        border: 2px solid var(--white);
+        color: var(--white);
+        padding: 12px 34px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-left: 12px;
+        transition: all 0.25s;
+      }
+      .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .carousel-dots {
+        position: absolute;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 3;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+        transition: background 0.25s;
+      }
+      .dot.active {
+        background: var(--accent);
+      }
+      .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: var(--white);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.1rem;
+        backdrop-filter: blur(4px);
+        transition: background 0.2s;
+        z-index: 3;
+      }
+      .carousel-btn:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .carousel-btn.prev {
+        left: 20px;
+      }
+      .carousel-btn.next {
+        right: 20px;
+      }
+
+      /* ══ SECTION COMMONS ══ */
+      section {
+        padding: 80px 40px;
+      }
+      .section-label {
+        display: block;
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--green);
+        margin-bottom: 10px;
+      }
+      .section-title {
+        text-align: center;
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.7rem, 3vw, 2.6rem);
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 14px;
+      }
+      .section-sub {
+        text-align: center;
+        color: var(--muted);
+        max-width: 560px;
+        margin: 0 auto 50px;
+        font-size: 0.97rem;
+        line-height: 1.7;
+      }
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      /* ── ABOUT ── */
+      #about {
+        background: var(--bg);
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .about-img {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        aspect-ratio: 1/1.1;
+      }
+      .about-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .about-badge {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        background: var(--green);
+        color: var(--white);
+        padding: 16px 20px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+      }
+      .about-badge strong {
+        display: block;
+        font-size: 1.6rem;
+        font-family: "Playfair Display", serif;
+      }
+      .about-text .label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--green);
+      }
+      .about-text h2 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+        font-weight: 700;
+        margin: 12px 0 16px;
+      }
+      .about-text p {
+        color: var(--muted);
+        line-height: 1.75;
+        margin-bottom: 24px;
+      }
+      .tab-btns {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .tab-btn {
+        padding: 8px 22px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+      }
+      .tab-btn.active,
+      .tab-btn:hover {
+        background: var(--green);
+        color: var(--white);
+      }
+      .tab-btn:not(.active) {
+        background: #e4f0e9;
+        color: var(--green);
+      }
+      .tab-content {
+        display: none;
+        animation: fadeUp 0.3s ease;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .tab-content p {
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 0.95rem;
+      }
+      .btn-green {
+        display: inline-block;
+        background: var(--green);
+        color: var(--white);
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-top: 20px;
+        transition: all 0.2s;
+      }
+      .btn-green:hover {
+        background: var(--green-dark);
+      }
+
+      /* ── SERVICES ── */
+      #services {
+        background: var(--white);
+      }
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      .service-card {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s;
+      }
+      .service-card:hover {
+        transform: translateY(-8px);
+      }
+      .service-card-img {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+      }
+      .service-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .service-card:hover .service-card-img img {
+        transform: scale(1.06);
+      }
+      .service-card-label {
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
+        background: var(--green);
+        color: var(--white);
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .service-card-body {
+        padding: 18px;
+      }
+      .service-card-body h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .service-card-body p {
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.65;
+      }
+      .center-btn {
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      /* ── DONATION ── */
+      #donation {
+        background: var(--bg);
+      }
+      .donation-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .donation-card {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        position: relative;
+        min-height: 320px;
+        cursor: pointer;
+      }
+      .donation-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .donation-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(10, 30, 15, 0.85) 50%,
+          transparent
+        );
+      }
+      .donation-card-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 24px;
+      }
+      .donation-tag {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 6px;
+      }
+      .donation-card-body h3 {
+        font-family: "Playfair Display", serif;
+        color: var(--white);
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .donation-card-body .sub {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+      .donation-card-body p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.82rem;
+        line-height: 1.6;
+      }
+      .donation-progress {
+        margin-top: 14px;
+        background: rgba(255, 255, 255, 0.25);
+        height: 5px;
+        border-radius: 10px;
+      }
+      .donation-progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 10px;
+      }
+
+      /* ── ACHIEVEMENTS ── */
+      #achievements {
+        position: relative;
+        background: url("https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1400&q=80")
+          center/cover no-repeat;
+        padding: 100px 40px;
+      }
+      #achievements::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 30, 15, 0.78);
+      }
+      .achievements-inner {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: var(--white);
+      }
+      .achievements-inner .section-label {
+        color: var(--accent);
+      }
+      .achievements-inner .section-title {
+        color: var(--white);
+      }
+      .achievements-inner .section-sub {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin: 40px 0;
+      }
+      .stat-box {
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        border-radius: 14px;
+        padding: 30px 20px;
+        backdrop-filter: blur(6px);
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .stat-box i {
+        font-size: 2rem;
+        color: var(--accent);
+        margin-bottom: 12px;
+      }
+      .stat-box .stat-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.75);
+        margin-bottom: 8px;
+      }
+      .stat-box .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: var(--white);
+      }
+      .stat-box .stat-num span {
+        color: var(--accent);
+      }
+      .btn-white {
+        display: inline-block;
+        background: var(--white);
+        color: var(--green-dark);
+        padding: 14px 38px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: all 0.25s;
+      }
+      .btn-white:hover {
+        background: var(--accent);
+        color: var(--dark);
+      }
+
+      /* ── EVENTS ── */
+      #events {
+        background: var(--white);
+      }
+      .events-carousel {
+        position: relative;
+        overflow: hidden;
+      }
+      .events-track {
+        display: flex;
+        gap: 24px;
+        transition: transform 0.5s ease;
+      }
+      .event-card {
+        min-width: calc(33.333% - 16px);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        flex-shrink: 0;
+      }
+      .event-card-img {
+        height: 220px;
+        overflow: hidden;
+        position: relative;
+      }
+      .event-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .event-card:hover .event-card-img img {
+        transform: scale(1.05);
+      }
+      .event-date-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: var(--green);
+        color: var(--white);
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .event-card-body {
+        padding: 20px;
+      }
+      .event-card-body .tag {
+        font-size: 0.73rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--green);
+        margin-bottom: 8px;
+      }
+      .event-card-body h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        line-height: 1.35;
+      }
+      .event-card-body p {
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+      .btn-sm {
+        display: inline-block;
+        background: var(--green);
+        color: var(--white);
+        padding: 8px 22px;
+        border-radius: 6px;
+        font-size: 0.83rem;
+        font-weight: 600;
+        transition: background 0.2s;
+      }
+      .btn-sm:hover {
+        background: var(--green-dark);
+      }
+      .carousel-nav {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .carousel-nav button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid var(--green);
+        background: transparent;
+        color: var(--green);
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .carousel-nav button:hover {
+        background: var(--green);
+        color: var(--white);
+      }
+
+      /* ── NEWS ── */
+      #news {
+        background: var(--bg);
+      }
+      .news-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      .news-card {
+        background: var(--white);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s;
+      }
+      .news-card:hover {
+        transform: translateY(-6px);
+      }
+      .news-card-img {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+      }
+      .news-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .news-card:hover .news-card-img img {
+        transform: scale(1.05);
+      }
+      .news-meta {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        display: flex;
+        gap: 12px;
+        font-size: 0.73rem;
+        color: var(--white);
+        align-items: center;
+      }
+      .news-meta span {
+        background: rgba(0, 0, 0, 0.45);
+        padding: 3px 10px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .news-card-body {
+        padding: 18px;
+      }
+      .news-card-body h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+      .news-card-body p {
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+
+      /* ── GALLERY ── */
+      #gallery {
+        background: var(--white);
+      }
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 220px;
+        gap: 12px;
+      }
+      .gallery-item {
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
+      .gallery-item.tall {
+        grid-row: span 2;
+      }
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .gallery-item:hover img {
+        transform: scale(1.08);
+      }
+      .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        color: var(--white);
+        font-size: 0.85rem;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .gallery-item:hover .gallery-caption {
+        opacity: 1;
+      }
+
+      /* ── VOLUNTEER ── */
+      #volunteer {
+        background: var(--bg);
+      }
+      .volunteer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .vol-photos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .vol-photo {
+        border-radius: 12px;
+        overflow: hidden;
+        aspect-ratio: 1;
+        position: relative;
+      }
+      .vol-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .vol-photo-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(29, 92, 52, 0.85);
+        color: var(--white);
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      .vol-content .label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--green);
+      }
+      .vol-content h2 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+        font-weight: 700;
+        margin: 12px 0 16px;
+      }
+      .vol-content p {
+        color: var(--muted);
+        line-height: 1.75;
+        margin-bottom: 20px;
+      }
+      .vol-benefits {
+        list-style: none;
+        margin-bottom: 28px;
+      }
+      .vol-benefits li {
+        padding: 7px 0;
+        color: var(--text);
+        font-size: 0.93rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .vol-benefits li::before {
+        content: "✓";
+        color: var(--green);
+        font-weight: 700;
+        font-size: 1rem;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: var(--dark);
+        color: #c8d8cc;
+        padding: 64px 40px 28px;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 48px;
+        margin-bottom: 48px;
+      }
+      .footer-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        color: var(--white);
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+      .footer-col p {
+        font-size: 0.88rem;
+        line-height: 1.75;
+        color: #94b09e;
+        margin-bottom: 20px;
+      }
+      .newsletter-form {
+        display: flex;
+      }
+      .newsletter-form input {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px 0 0 6px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        outline: none;
+      }
+      .newsletter-form button {
+        background: var(--green);
+        color: var(--white);
+        border: none;
+        padding: 10px 18px;
+        border-radius: 0 6px 6px 0;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: background 0.2s;
+      }
+      .newsletter-form button:hover {
+        background: var(--green-light);
+      }
+      .footer-col h4 {
+        color: var(--white);
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .footer-links {
+        list-style: none;
+      }
+      .footer-links li {
+        margin-bottom: 9px;
+      }
+      .footer-links a {
+        color: #94b09e;
+        font-size: 0.88rem;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .footer-links a::before {
+        content: "›";
+        color: var(--green);
+        font-size: 1.1rem;
+      }
+      .footer-links a:hover {
+        color: var(--accent);
+      }
+      .footer-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+      }
+      .footer-gallery img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 5px;
+        transition: opacity 0.2s;
+      }
+      .footer-gallery img:hover {
+        opacity: 0.8;
+      }
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.82rem;
+        color: #6b8c75;
+      }
+      .footer-socials {
+        display: flex;
+        gap: 12px;
+      }
+      .footer-socials a {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #c8d8cc;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+      }
+      .footer-socials a:hover {
+        background: var(--green);
+        color: var(--white);
+      }
+
+      /* ── BACK TO TOP ── */
+      .back-top {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        background: var(--green);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.3s;
+        z-index: 999;
+      }
+      .back-top.visible {
+        opacity: 1;
+      }
+      .back-top:hover {
+        background: var(--green-dark);
+        transform: translateY(-3px);
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1024px) {
+        .cards-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .news-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        nav {
+          padding: 0 20px;
+        }
+        .topbar {
+          padding: 6px 20px;
+        }
+        .nav-links {
+          display: none;
+        }
+        section {
+          padding: 60px 20px;
+        }
+        .about-grid,
+        .volunteer-grid {
+          grid-template-columns: 1fr;
+        }
+        .donation-grid {
+          grid-template-columns: 1fr;
+        }
+        .event-card {
+          min-width: 85%;
+        }
+        .gallery-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        /* Di mobile, langsung full width saja */
+        #header-section {
+          left: 0;
+          right: 0;
+          border-radius: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ════════ HEADER ════════ -->
+    <div id="header-section">
+      <!-- TOP BAR -->
+      <div class="topbar-wrap">
+        <div class="topbar">
+          <div>
+            <i class="fas fa-envelope"></i> example@gmail.com &nbsp;|&nbsp;
+            <i class="fas fa-phone"></i> +01234567890
+          </div>
+          <div>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-pinterest"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAVBAR -->
+      <nav id="mainNav">
+        <div class="logo">Environs</div>
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#donation">Causes</a></li>
+          <li><a href="#events">Events</a></li>
+          <li class="dropdown">
+            <a href="#">Pages ▾</a>
+            <ul>
+              <li><a href="#news">News</a></li>
+              <li><a href="#gallery">Gallery</a></li>
+              <li><a href="#volunteer">Volunteer</a></li>
+            </ul>
+          </li>
+          <li><a href="#footer">Contact</a></li>
+        </ul>
+        <a href="#donation" class="btn-donate">Donate Now</a>
+      </nav>
+    </div>
+    <!-- ════ END HEADER ════ -->
+
+    <!-- HERO -->
+    <div class="carousel" id="heroCarousel">
+      <div
+        class="slide active"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1400&q=80&quot;);
+        "
+      ></div>
+      <div
+        class="slide"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1400&q=80&quot;);
+        "
+      ></div>
+      <div
+        class="slide"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1400&q=80&quot;);
+        "
+      ></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content fade-up visible">
+        <span class="slide-tag">Waktunya Beraksi</span>
+        <h1>Pulihkan Hijau<br />Bumi Kita</h1>
+        <p>
+          Satu pohon yang Anda tanam hari ini adalah nafas bagi generasi
+          mendatang. Mari bergabung dalam gerakan reboisasi nasional.
+        </p>
+        <a href="#" class="btn-primary">Mulai Menanam</a>
+        <a href="#about" class="btn-outline">Pelajari Lebih</a>
+      </div>
+      <button class="carousel-btn prev" onclick="moveSlide(-1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="carousel-btn next" onclick="moveSlide(1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <div class="carousel-dots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-img fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&q=80"
+              alt="About Environs"
+            />
+            <div class="about-badge">
+              <strong>15+</strong> Tahun Berdedikasi
+            </div>
+          </div>
+          <div class="about-text fade-up">
+            <span class="label">About Us</span>
+            <h2>Misi Utama Kami Adalah Menjaga Kelestarian Alam</h2>
+            <p>
+              Kami adalah organisasi yang berdedikasi untuk memulihkan ekosistem
+              dan mengedukasi masyarakat tentang pentingnya keberlanjutan.
+              Bersama, kita bisa menciptakan dunia yang lebih hijau untuk
+              generasi mendatang.
+            </p>
+            <div class="tab-btns">
+              <button
+                class="tab-btn active"
+                onclick="switchTab('about-tab', event)"
+              >
+                About
+              </button>
+              <button class="tab-btn" onclick="switchTab('mission-tab', event)">
+                Mission
+              </button>
+              <button class="tab-btn" onclick="switchTab('vision-tab', event)">
+                Vision
+              </button>
+            </div>
+            <div id="about-tab" class="tab-content active">
+              <p>
+                <strong>Tentang Kami</strong><br />Mengurangi dampak pemanasan
+                global melalui aksi penanaman hutan kembali dan kampanye
+                pengurangan limbah plastik secara berkelanjutan.
+              </p>
+            </div>
+            <div id="mission-tab" class="tab-content">
+              <p>
+                <strong>Misi Kami</strong><br />Membangun kesadaran lingkungan
+                yang kuat di seluruh lapisan masyarakat melalui program edukasi,
+                advokasi kebijakan, dan aksi nyata di lapangan.
+              </p>
+            </div>
+            <div id="vision-tab" class="tab-content">
+              <p>
+                <strong>Visi Kami</strong><br />Menjadi organisasi lingkungan
+                terdepan di Asia Tenggara yang mendorong perubahan positif
+                berkelanjutan demi ekosistem yang sehat dan planet yang lestari.
+              </p>
+            </div>
+            <a href="#" class="btn-green">Read More</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="container">
+        <span class="section-label">What We Do</span>
+        <h2 class="section-title">
+          Kontribusi Nyata Kami Untuk Menjaga<br />Kelestarian Lingkungan
+        </h2>
+        <div class="cards-grid">
+          <div class="service-card fade-up">
+            <div class="service-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80"
+                alt="Penggalangan Dana"
+              />
+              <span class="service-card-label">Penggalangan Dana</span>
+            </div>
+            <div class="service-card-body">
+              <h3>Penggalangan Dana</h3>
+              <p>
+                Mengumpulkan dukungan finansial secara transparan untuk
+                membiayai proyek penghijauan dan pemulihan lahan kritis di
+                berbagai wilayah.
+              </p>
+            </div>
+          </div>
+          <div class="service-card fade-up">
+            <div class="service-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80"
+                alt="Kemitraan Strategis"
+              />
+              <span class="service-card-label">Kemitraan Strategis</span>
+            </div>
+            <div class="service-card-body">
+              <h3>Kemitraan Strategis</h3>
+              <p>
+                Bekerja sama erat dengan pemerintah dan sektor swasta untuk
+                menyediakan layanan konsultasi lingkungan yang berkelanjutan.
+              </p>
+            </div>
+          </div>
+          <div class="service-card fade-up">
+            <div class="service-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+                alt="Ekowisata Terpadu"
+              />
+              <span class="service-card-label">Ekowisata Terpadu</span>
+            </div>
+            <div class="service-card-body">
+              <h3>Ekowisata Terpadu</h3>
+              <p>
+                Menyediakan tur ekolasi alam yang dipandu oleh ahli profesional
+                untuk meningkatkan kesadaran masyarakat tentang ekosistem hutan.
+              </p>
+            </div>
+          </div>
+          <div class="service-card fade-up">
+            <div class="service-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80"
+                alt="Konservasi Satwa"
+              />
+              <span class="service-card-label">Konservasi Satwa</span>
+            </div>
+            <div class="service-card-body">
+              <h3>Konservasi Satwa</h3>
+              <p>
+                Melindungi habitat asli hewan liar dari perburuan dan kerusakan
+                lahan guna menjaga rantai makanan serta keanekaragaman hayati.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="center-btn fade-up">
+          <a href="#" class="btn-green">Read More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DONATION -->
+    <section id="donation">
+      <div class="container">
+        <span class="section-label">Donation</span>
+        <h2 class="section-title">Your Money Will Save Our Life</h2>
+        <p class="section-sub">
+          Donasi Anda akan langsung mendukung program-program pelestarian
+          lingkungan yang nyata dan terukur.
+        </p>
+        <div class="donation-grid">
+          <div class="donation-card fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&q=80"
+              alt="Organic"
+            />
+            <div class="donation-card-overlay"></div>
+            <div class="donation-card-body">
+              <div class="donation-tag">Organic</div>
+              <h3>Help Us More</h3>
+              <div class="sub">Protect Environments</div>
+              <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </p>
+              <div class="donation-progress">
+                <div class="donation-progress-fill" style="width: 68%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donation-card fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700&q=80"
+              alt="Ecosystem"
+            />
+            <div class="donation-card-overlay"></div>
+            <div class="donation-card-body">
+              <div class="donation-tag">Ecosystem</div>
+              <h3>Help Us More</h3>
+              <div class="sub">Protect Environments</div>
+              <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </p>
+              <div class="donation-progress">
+                <div class="donation-progress-fill" style="width: 45%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donation-card fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80"
+              alt="Recycling"
+            />
+            <div class="donation-card-overlay"></div>
+            <div class="donation-card-body">
+              <div class="donation-tag">Recycling</div>
+              <h3>Help Us More</h3>
+              <div class="sub">Protect Environments</div>
+              <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </p>
+              <div class="donation-progress">
+                <div class="donation-progress-fill" style="width: 82%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="center-btn fade-up" style="margin-top: 40px">
+          <a href="#" class="btn-green">All Donation</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="achievements">
+      <div class="container achievements-inner">
+        <span class="section-label">Achievements</span>
+        <h2 class="section-title">Pencapaian Yang Telah Kami Raih</h2>
+        <p class="section-sub">
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s.
+        </p>
+        <div class="stats-grid">
+          <div class="stat-box fade-up">
+            <i class="fas fa-thumbs-up"></i>
+            <div class="stat-label">Beavers Saved</div>
+            <div class="stat-num" data-target="1248">0<span>+</span></div>
+          </div>
+          <div class="stat-box fade-up">
+            <i class="fas fa-dollar-sign"></i>
+            <div class="stat-label">Funds Collected</div>
+            <div class="stat-num" data-target="613">0<span> $</span></div>
+          </div>
+          <div class="stat-box fade-up">
+            <i class="fas fa-user"></i>
+            <div class="stat-label">Volunteer</div>
+            <div class="stat-num" data-target="713">0<span>+</span></div>
+          </div>
+          <div class="stat-box fade-up">
+            <i class="fas fa-heart"></i>
+            <div class="stat-label">Days of Help</div>
+            <div class="stat-num" data-target="487">0<span>+</span></div>
+          </div>
+        </div>
+        <a href="#volunteer" class="btn-white">Join With Us</a>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section id="events">
+      <div class="container">
+        <span class="section-label">Upcoming Events</span>
+        <h2 class="section-title">
+          Bantulah hari ini karena besok mungkin Anda<br />yang membutuhkan
+          lebih banyak bantuan!
+        </h2>
+        <div class="events-carousel">
+          <div class="events-track" id="eventsTrack">
+            <div class="event-card fade-up">
+              <div class="event-card-img">
+                <img src="asset/antony real betis 3.jpeg" alt="Event 1" />
+                <div class="event-date-badge">15<br />Mar</div>
+              </div>
+              <div class="event-card-body">
+                <div class="tag">Environment</div>
+                <h3>How To Build A Cleaning Plan</h3>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                  eiusmod tempor amet incididunt.
+                </p>
+                <a href="#" class="btn-sm">Read More</a>
+              </div>
+            </div>
+            <div class="event-card fade-up">
+              <div class="event-card-img">
+                <img src="asset/antony betis 5.jpeg" alt="Event 2" />
+                <div class="event-date-badge">22<br />Mar</div>
+              </div>
+              <div class="event-card-body">
+                <div class="tag">Campaign</div>
+                <h3>How To Build A Cleaning Plan</h3>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                  eiusmod tempor amet incididunt.
+                </p>
+                <a href="#" class="btn-sm">Read More</a>
+              </div>
+            </div>
+            <div class="event-card fade-up">
+              <div class="event-card-img">
+                <img src="asset/antony betis 9.webp" alt="Event 3" />
+                <div class="event-date-badge">05<br />Apr</div>
+              </div>
+              <div class="event-card-body">
+                <div class="tag">Activism</div>
+                <h3>How To Build A Cleaning Plan</h3>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                  eiusmod tempor amet incididunt.
+                </p>
+                <a href="#" class="btn-sm">Read More</a>
+              </div>
+            </div>
+            <div class="event-card fade-up"></div>
+          </div>
+        </div>
+        <div class="carousel-nav">
+          <button onclick="moveEvents(-1)">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button onclick="moveEvents(1)">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWS -->
+    <section id="news">
+      <div class="container">
+        <span class="section-label">Latest News</span>
+        <h2 class="section-title">
+          Mari berbagi dan peduli sebelum alam<br />kehilangan kekuatannya.
+        </h2>
+        <div class="news-grid">
+          <div class="news-card fade-up">
+            <div class="news-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=500&q=80"
+                alt="News 1"
+              />
+              <div class="news-meta">
+                <span><i class="far fa-calendar"></i> Dec 01, 2024</span>
+                <span><i class="far fa-heart"></i> 3</span>
+                <span><i class="far fa-comment"></i> 0</span>
+              </div>
+            </div>
+            <div class="news-card-body">
+              <h3>Save The Topic Forests</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                euismod tempor amet consectetur.
+              </p>
+              <a href="#" class="btn-sm">Read More</a>
+            </div>
+          </div>
+          <div class="news-card fade-up">
+            <div class="news-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=500&q=80"
+                alt="News 2"
+              />
+              <div class="news-meta">
+                <span><i class="far fa-calendar"></i> Dec 01, 2024</span>
+                <span><i class="far fa-heart"></i> 3</span>
+                <span><i class="far fa-comment"></i> 0</span>
+              </div>
+            </div>
+            <div class="news-card-body">
+              <h3>Save The Topic Forests</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                euismod tempor amet consectetur.
+              </p>
+              <a href="#" class="btn-sm">Read More</a>
+            </div>
+          </div>
+          <div class="news-card fade-up">
+            <div class="news-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=500&q=80"
+                alt="News 3"
+              />
+              <div class="news-meta">
+                <span><i class="far fa-calendar"></i> Dec 01, 2024</span>
+                <span><i class="far fa-heart"></i> 3</span>
+                <span><i class="far fa-comment"></i> 0</span>
+              </div>
+            </div>
+            <div class="news-card-body">
+              <h3>Save The Topic Forests</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                euismod tempor amet consectetur.
+              </p>
+              <a href="#" class="btn-sm">Read More</a>
+            </div>
+          </div>
+          <div class="news-card fade-up">
+            <div class="news-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=500&q=80"
+                alt="News 4"
+              />
+              <div class="news-meta">
+                <span><i class="far fa-calendar"></i> Dec 01, 2024</span>
+                <span><i class="far fa-heart"></i> 3</span>
+                <span><i class="far fa-comment"></i> 0</span>
+              </div>
+            </div>
+            <div class="news-card-body">
+              <h3>Save The Topic Forests</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed
+                euismod tempor amet consectetur.
+              </p>
+              <a href="#" class="btn-sm">Read More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery">
+      <div class="container">
+        <span class="section-label">Our Work</span>
+        <h2 class="section-title">We Consider Environment Welfare</h2>
+        <p class="section-sub">
+          Lorem ipsum dolor sit amet consectetur adipiscing elit sed euismod
+          tempor amet consectetur adipiscing elit.
+        </p>
+        <div class="gallery-grid">
+          <div class="gallery-item tall fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=700&q=80"
+              alt="Gallery 1"
+            />
+            <div class="gallery-caption">Beauty Of Life</div>
+          </div>
+          <div class="gallery-item fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&q=80"
+              alt="Gallery 2"
+            />
+            <div class="gallery-caption">Mountain Peak</div>
+          </div>
+          <div class="gallery-item fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=700&q=80"
+              alt="Gallery 3"
+            />
+            <div class="gallery-caption">Forest Life</div>
+          </div>
+          <div class="gallery-item fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=700&q=80"
+              alt="Gallery 4"
+            />
+            <div class="gallery-caption">Animal Conservation</div>
+          </div>
+          <div class="gallery-item fade-up">
+            <img
+              src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=700&q=80"
+              alt="Gallery 5"
+            />
+            <div class="gallery-caption">Green Valley</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VOLUNTEER -->
+    <section id="volunteer">
+      <div class="container">
+        <div class="volunteer-grid">
+          <div class="vol-photos fade-up">
+            <div class="vol-photo">
+              <img src="asset/walter white 2.webp" alt="Volunteer 1" />
+              <div class="vol-photo-label">Walter White – Producer</div>
+            </div>
+            <div class="vol-photo">
+              <img src="asset/jesse pinkman.webp" alt="Volunteer 2" />
+              <div class="vol-photo-label">Jesse Pinkman – Partner</div>
+            </div>
+            <div class="vol-photo">
+              <img src="asset/jimmy.jpg" alt="Volunteer 3" />
+              <div class="vol-photo-label">Saul Goodman – Lawyer</div>
+            </div>
+            <div class="vol-photo">
+              <img src="asset/mike ermanthraut.jpg" alt="Volunteer 4" />
+              <div class="vol-photo-label">Mike Ermanthraut – Assasin</div>
+            </div>
+          </div>
+          <div class="vol-content fade-up">
+            <span class="label">Become A Volunteer?</span>
+            <h2>
+              Join your hand with us for a better life and beautiful future.
+            </h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipiscing elit sed euismod
+              tempor amet consectetur adipiscing elit.
+            </p>
+            <ul class="vol-benefits">
+              <li>We are friendly to each other.</li>
+              <li>If you join with us, We will give you free training.</li>
+              <li>Its an opportunity to help poor Environments.</li>
+              <li>No goal requirements.</li>
+              <li>Joining is totally free. We dont need any money from you.</li>
+            </ul>
+            <a href="#" class="btn-green">Join With Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <div class="footer-logo">Environs</div>
+            <p>
+              Dolor amet elit justo amet elit ultro ipsum elit sed Lorem ipsum
+              dolor sit amet, consectetur adipiscing elit consectetur adipiscing
+              elit.
+            </p>
+            <div class="newsletter-form">
+              <input type="email" placeholder="Enter your email" />
+              <button>SignUp</button>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Our Services</h4>
+            <ul class="footer-links">
+              <li><a href="#">Ocean Turtle</a></li>
+              <li><a href="#">White Tiger</a></li>
+              <li><a href="#">Social Ecology</a></li>
+              <li><a href="#">LoveGrass</a></li>
+              <li><a href="#">Beauty of Life</a></li>
+              <li><a href="#">Present for You</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Volunteer</h4>
+            <ul class="footer-links">
+              <li><a href="#">Karen Dawson</a></li>
+              <li><a href="#">Jack Simmons</a></li>
+              <li><a href="#">Michael Linden</a></li>
+              <li><a href="#">Simon Green</a></li>
+              <li><a href="#">Natalie Channing</a></li>
+              <li><a href="#">Caroline Girwig</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Our Gallery</h4>
+            <div class="footer-gallery">
+              <img
+                src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=120&q=80"
+                alt="Gallery"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=120&q=80"
+                alt="Gallery"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1444464666168-49d633b86797?w=120&q=80"
+                alt="Gallery"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=120&q=80"
+                alt="Gallery"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=120&q=80"
+                alt="Gallery"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=120&q=80"
+                alt="Gallery"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 Environs. All rights reserved.</span>
+          <div class="footer-socials">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div
+      class="back-top"
+      id="backTop"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <script>
+      /* ══════════════════════════════════════════
+         SCROLL HANDLER – Animasi Header
+         Teknik: ubah width + left + transform
+         sekaligus via CSS transition 0.5s cubic
+      ══════════════════════════════════════════ */
+      const headerSection = document.getElementById("header-section");
+      const mainNav = document.getElementById("mainNav");
+      let isScrolled = false;
+
+      function handleScroll() {
+        const scrollY = window.scrollY;
+        const shouldBeScrolled = scrollY > 20;
+
+        if (shouldBeScrolled !== isScrolled) {
+          isScrolled = shouldBeScrolled;
+
+          if (shouldBeScrolled) {
+            // Sebelum ubah ke fixed, ambil posisi bounding rect supaya tidak lompat
+            // Gunakan rAF agar browser sempat render satu frame
+            requestAnimationFrame(() => {
+              headerSection.classList.add("scrolled");
+              mainNav.classList.add("scrolled");
+            });
+          } else {
+            headerSection.classList.remove("scrolled");
+            mainNav.classList.remove("scrolled");
+          }
+        }
+
+        // Back to top button
+        document
+          .getElementById("backTop")
+          .classList.toggle("visible", scrollY > 300);
+      }
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+
+      /* HERO CAROUSEL */
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot");
+      function goToSlide(n) {
+        slides[currentSlide].classList.remove("active");
+        dots[currentSlide].classList.remove("active");
+        currentSlide = (n + slides.length) % slides.length;
+        slides[currentSlide].classList.add("active");
+        dots[currentSlide].classList.add("active");
+      }
+      function moveSlide(dir) {
+        goToSlide(currentSlide + dir);
+      }
+      setInterval(() => moveSlide(1), 5000);
+
+      /* ABOUT TABS */
+      function switchTab(id, event) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      /* EVENTS CAROUSEL */
+      let eventsPos = 0;
+      const eventsTrack = document.getElementById("eventsTrack");
+      function moveEvents(dir) {
+        const card = eventsTrack.querySelector(".event-card");
+        const cardW = card.offsetWidth + 24;
+        const maxPos = -(eventsTrack.children.length - 3) * cardW;
+        eventsPos = Math.min(0, Math.max(maxPos, eventsPos - dir * cardW));
+        eventsTrack.style.transform = `translateX(${eventsPos}px)`;
+      }
+
+      /* COUNTER ANIMATION */
+      function animateCounter(el) {
+        const target = +el.getAttribute("data-target");
+        const suffix = el.querySelector("span").textContent;
+        let count = 0;
+        const step = Math.ceil(target / 80);
+        const timer = setInterval(() => {
+          count = Math.min(count + step, target);
+          el.innerHTML = count.toLocaleString() + "<span>" + suffix + "</span>";
+          if (count >= target) clearInterval(timer);
+        }, 18);
+      }
+
+      /* INTERSECTION OBSERVER */
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          });
+        },
+        { threshold: 0.15 },
+      );
+      document
+        .querySelectorAll(".fade-up")
+        .forEach((el) => observer.observe(el));
+
+      document.querySelectorAll(".stat-num[data-target]").forEach((el) => {
+        const o = new IntersectionObserver(
+          (entries) => {
+            if (entries[0].isIntersecting) {
+              animateCounter(el);
+              o.disconnect();
+            }
+          },
+          { threshold: 0.5 },
+        );
+        o.observe(el);
+      });
+    </script>
+  </body>
+</html>
