@@ -47,28 +47,19 @@
         max-width: 100%;
       }
 
-      /* ══════════════════════════════════════════
-         HEADER WRAPPER
-         - Saat awal: absolute, width 85%, tengah
-         - Saat scroll: fixed, width 100%, full
-         - Semua transisi pakai CSS transition
-      ══════════════════════════════════════════ */
+      /* ══ HEADER ══ */
       #header-section {
-        /* Selalu fixed dari awal — tidak ada perubahan position saat scroll
-           sehingga CSS transition bisa berjalan mulus tanpa reflow */
         position: fixed;
         top: 0;
-        left: 7.5%; /* (100% - 85%) / 2 */
+        left: 7.5%;
         right: 7.5%;
         z-index: 1000;
-
         transition:
           left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
           right 0.5s cubic-bezier(0.4, 0, 0.2, 1),
           border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1),
           box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
-
       #header-section.scrolled {
         left: 0;
         right: 0;
@@ -76,18 +67,11 @@
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
       }
 
-      /* ══ TOP BAR – hijau tua ══ */
+      /* ══ TOP BAR ══ */
       .topbar-wrap {
         background: var(--green-dark);
         width: 100%;
-        transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
-
-      /* Saat 85% → rounded top sudah dari wrapper */
-      #header-section:not(.scrolled) .topbar-wrap {
-        border-radius: 0 0 0 0; /* wrapper yang handle */
-      }
-
       .topbar {
         color: #cde8d6;
         font-size: 0.78rem;
@@ -95,13 +79,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
-
-      #header-section.scrolled .topbar {
-        padding: 6px 40px;
-      }
-
       .topbar a {
         color: #cde8d6;
         margin-left: 12px;
@@ -112,7 +90,7 @@
         color: var(--accent);
       }
 
-      /* ══ NAVBAR – putih ══ */
+      /* ══ NAVBAR ══ */
       nav {
         background: var(--white);
         padding: 0 40px;
@@ -121,14 +99,8 @@
         justify-content: space-between;
         height: 68px;
         width: 100%;
-        margin: 0;
-        border-radius: 0;
-        transition:
-          box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-          background 0.3s ease;
+        position: relative;
       }
-
-      /* Subtle shadow saat navbar dalam kondisi scrolled */
       #header-section.scrolled nav {
         box-shadow: 0 2px 0 rgba(45, 138, 78, 0.08);
       }
@@ -139,11 +111,6 @@
         font-weight: 800;
         color: var(--green);
         letter-spacing: -0.5px;
-        transition: letter-spacing 0.3s ease;
-      }
-
-      #header-section.scrolled .logo {
-        letter-spacing: -0.3px;
       }
 
       .nav-links {
@@ -175,7 +142,7 @@
         padding: 8px 0;
         min-width: 140px;
         list-style: none;
-        z-index: 10;
+        z-index: 2000;
       }
       .nav-links .dropdown:hover ul {
         display: block;
@@ -185,6 +152,7 @@
         padding: 8px 20px;
         font-size: 0.85rem;
       }
+
       .btn-donate {
         background: var(--green);
         color: var(--white);
@@ -199,6 +167,181 @@
         background: var(--green-dark);
       }
 
+      /* ══ HAMBURGER BUTTON ══ */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        padding: 4px;
+        gap: 5px;
+        border-radius: 6px;
+        transition: background 0.2s;
+        z-index: 3000;
+      }
+      .hamburger:hover {
+        background: rgba(45, 138, 78, 0.08);
+      }
+      .hamburger span {
+        display: block;
+        width: 24px;
+        height: 2.5px;
+        background: var(--green);
+        border-radius: 4px;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+      }
+      /* Animasi X saat menu terbuka */
+      .hamburger.open span:nth-child(1) {
+        transform: translateY(7.5px) rotate(45deg);
+      }
+      .hamburger.open span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      .hamburger.open span:nth-child(3) {
+        transform: translateY(-7.5px) rotate(-45deg);
+      }
+
+      /* ══ MOBILE DRAWER MENU ══ */
+      .mobile-menu {
+        display: none; /* hidden on desktop */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2500;
+        pointer-events: none;
+      }
+      /* Backdrop */
+      .mobile-menu-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        transition: opacity 0.35s ease;
+      }
+      /* Drawer panel */
+      .mobile-menu-panel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: min(300px, 85vw);
+        height: 100%;
+        background: var(--white);
+        transform: translateX(100%);
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+      }
+      .mobile-menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid #e4f0e9;
+        background: var(--bg);
+      }
+      .mobile-menu-header .logo {
+        font-size: 1.4rem;
+      }
+      .mobile-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: #e4f0e9;
+        color: var(--green);
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .mobile-close:hover {
+        background: var(--green);
+        color: white;
+      }
+
+      .mobile-nav-links {
+        list-style: none;
+        padding: 12px 0;
+        flex: 1;
+      }
+      .mobile-nav-links li {
+        border-bottom: 1px solid #f0f5f1;
+      }
+      .mobile-nav-links > li > a,
+      .mobile-nav-links > li > span {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text);
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .mobile-nav-links > li > a:hover,
+      .mobile-nav-links > li > span:hover {
+        background: #f0f8f2;
+        color: var(--green);
+        padding-left: 30px;
+      }
+      /* Submenu mobile */
+      .mobile-submenu {
+        display: none;
+        background: #f7fcf8;
+        border-top: 1px solid #e4f0e9;
+      }
+      .mobile-submenu.open {
+        display: block;
+      }
+      .mobile-submenu a {
+        display: block;
+        padding: 11px 36px;
+        font-size: 0.88rem;
+        color: var(--muted);
+        transition: all 0.2s;
+      }
+      .mobile-submenu a:hover {
+        color: var(--green);
+        background: #eef7f1;
+      }
+
+      .mobile-menu-footer {
+        padding: 20px 24px;
+        border-top: 1px solid #e4f0e9;
+      }
+      .mobile-menu-footer .btn-donate {
+        display: block;
+        text-align: center;
+        padding: 14px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+      }
+
+      /* State: menu terbuka */
+      .mobile-menu.open {
+        pointer-events: all;
+      }
+      .mobile-menu.open .mobile-menu-backdrop {
+        opacity: 1;
+      }
+      .mobile-menu.open .mobile-menu-panel {
+        transform: translateX(0);
+      }
+
       /* ══ HERO CAROUSEL ══ */
       .carousel {
         position: relative;
@@ -207,7 +350,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        /* Header selalu fixed, hero tetap mulai dari top:0 agar full-bleed */
         margin-top: 0;
       }
       .slide {
@@ -1156,7 +1298,9 @@
         transform: translateY(0);
       }
 
-      /* ── RESPONSIVE ── */
+      /* ══════════════════════════════════════════
+         RESPONSIVE
+      ══════════════════════════════════════════ */
       @media (max-width: 1024px) {
         .cards-grid {
           grid-template-columns: repeat(2, 1fr);
@@ -1171,16 +1315,42 @@
           grid-template-columns: 1fr 1fr;
         }
       }
+
       @media (max-width: 768px) {
+        /* Header jadi full width di mobile */
+        #header-section {
+          left: 0;
+          right: 0;
+          border-radius: 0;
+        }
+
         nav {
-          padding: 0 20px;
+          padding: 0 16px;
+          height: 60px;
         }
         .topbar {
-          padding: 6px 20px;
+          padding: 6px 16px;
+          font-size: 0.72rem;
         }
+
+        /* Sembunyikan nav links desktop & tombol donate di navbar */
         .nav-links {
           display: none;
         }
+        .btn-donate {
+          display: none;
+        }
+
+        /* Tampilkan hamburger */
+        .hamburger {
+          display: flex;
+        }
+
+        /* Tampilkan mobile drawer */
+        .mobile-menu {
+          display: block;
+        }
+
         section {
           padding: 60px 20px;
         }
@@ -1201,11 +1371,39 @@
           grid-template-columns: 1fr;
         }
 
-        /* Di mobile, langsung full width saja */
-        #header-section {
-          left: 0;
-          right: 0;
-          border-radius: 0;
+        .carousel {
+          height: 480px;
+        }
+        .btn-outline {
+          margin-left: 0;
+          margin-top: 10px;
+          display: block;
+        }
+
+        .cards-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .news-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .slide-content h1 {
+          font-size: 1.9rem;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+        .stat-box {
+          padding: 20px 14px;
+        }
+        .stat-box .stat-num {
+          font-size: 1.8rem;
         }
       }
     </style>
@@ -1250,9 +1448,66 @@
           <li><a href="#footer">Contact</a></li>
         </ul>
         <a href="#donation" class="btn-donate">Donate Now</a>
+
+        <!-- HAMBURGER BUTTON (hanya muncul di mobile) -->
+        <button
+          class="hamburger"
+          id="hamburgerBtn"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </nav>
     </div>
-    <!-- ════ END HEADER ════ -->
+
+    <!-- ════ MOBILE DRAWER MENU ════ -->
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <div class="mobile-menu-backdrop" id="mobileBackdrop"></div>
+      <div
+        class="mobile-menu-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation Menu"
+      >
+        <div class="mobile-menu-header">
+          <div class="logo">Environs</div>
+          <button class="mobile-close" id="mobileClose" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <ul class="mobile-nav-links">
+          <li><a href="#" onclick="closeMobileMenu()">Home</a></li>
+          <li><a href="#about" onclick="closeMobileMenu()">About</a></li>
+          <li><a href="#services" onclick="closeMobileMenu()">Services</a></li>
+          <li><a href="#donation" onclick="closeMobileMenu()">Causes</a></li>
+          <li><a href="#events" onclick="closeMobileMenu()">Events</a></li>
+          <li>
+            <span onclick="toggleMobileSubmenu(this)">
+              Pages
+              <i
+                class="fas fa-chevron-down"
+                style="font-size: 0.75rem; transition: transform 0.3s"
+              ></i>
+            </span>
+            <div class="mobile-submenu" id="pagesSubmenu">
+              <a href="#news" onclick="closeMobileMenu()">News</a>
+              <a href="#gallery" onclick="closeMobileMenu()">Gallery</a>
+              <a href="#volunteer" onclick="closeMobileMenu()">Volunteer</a>
+            </div>
+          </li>
+          <li><a href="#footer" onclick="closeMobileMenu()">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-footer">
+          <a href="#donation" class="btn-donate" onclick="closeMobileMenu()">
+            <i class="fas fa-heart" style="margin-right: 8px"></i>Donate Now
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- ════ END MOBILE MENU ════ -->
 
     <!-- HERO -->
     <div class="carousel" id="heroCarousel">
@@ -1522,8 +1777,7 @@
         <h2 class="section-title">Pencapaian Yang Telah Kami Raih</h2>
         <p class="section-sub">
           Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s.
+          industry.
         </p>
         <div class="stats-grid">
           <div class="stat-box fade-up">
@@ -1899,44 +2153,69 @@
     </div>
 
     <script>
-      /* ══════════════════════════════════════════
-         SCROLL HANDLER – Animasi Header
-         Teknik: ubah width + left + transform
-         sekaligus via CSS transition 0.5s cubic
-      ══════════════════════════════════════════ */
+      /* ══ SCROLL HEADER ══ */
       const headerSection = document.getElementById("header-section");
-      const mainNav = document.getElementById("mainNav");
       let isScrolled = false;
-
       function handleScroll() {
         const scrollY = window.scrollY;
         const shouldBeScrolled = scrollY > 20;
-
         if (shouldBeScrolled !== isScrolled) {
           isScrolled = shouldBeScrolled;
-
-          if (shouldBeScrolled) {
-            // Sebelum ubah ke fixed, ambil posisi bounding rect supaya tidak lompat
-            // Gunakan rAF agar browser sempat render satu frame
-            requestAnimationFrame(() => {
-              headerSection.classList.add("scrolled");
-              mainNav.classList.add("scrolled");
-            });
-          } else {
-            headerSection.classList.remove("scrolled");
-            mainNav.classList.remove("scrolled");
-          }
+          requestAnimationFrame(() => {
+            headerSection.classList.toggle("scrolled", shouldBeScrolled);
+          });
         }
-
-        // Back to top button
         document
           .getElementById("backTop")
           .classList.toggle("visible", scrollY > 300);
       }
-
       window.addEventListener("scroll", handleScroll, { passive: true });
 
-      /* HERO CAROUSEL */
+      /* ══ MOBILE HAMBURGER MENU ══ */
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const mobileClose = document.getElementById("mobileClose");
+      const mobileBackdrop = document.getElementById("mobileBackdrop");
+
+      function openMobileMenu() {
+        mobileMenu.classList.add("open");
+        mobileMenu.setAttribute("aria-hidden", "false");
+        hamburgerBtn.classList.add("open");
+        hamburgerBtn.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden"; // prevent body scroll
+      }
+
+      function closeMobileMenu() {
+        mobileMenu.classList.remove("open");
+        mobileMenu.setAttribute("aria-hidden", "true");
+        hamburgerBtn.classList.remove("open");
+        hamburgerBtn.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      }
+
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.contains("open")
+          ? closeMobileMenu()
+          : openMobileMenu();
+      });
+      mobileClose.addEventListener("click", closeMobileMenu);
+      mobileBackdrop.addEventListener("click", closeMobileMenu);
+
+      // Tutup menu saat ESC ditekan
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && mobileMenu.classList.contains("open"))
+          closeMobileMenu();
+      });
+
+      /* ══ MOBILE SUBMENU TOGGLE ══ */
+      function toggleMobileSubmenu(el) {
+        const submenu = el.nextElementSibling;
+        const icon = el.querySelector("i");
+        const isOpen = submenu.classList.toggle("open");
+        icon.style.transform = isOpen ? "rotate(180deg)" : "rotate(0deg)";
+      }
+
+      /* ══ HERO CAROUSEL ══ */
       let currentSlide = 0;
       const slides = document.querySelectorAll(".slide");
       const dots = document.querySelectorAll(".dot");
@@ -1952,7 +2231,7 @@
       }
       setInterval(() => moveSlide(1), 5000);
 
-      /* ABOUT TABS */
+      /* ══ ABOUT TABS ══ */
       function switchTab(id, event) {
         document
           .querySelectorAll(".tab-content")
@@ -1964,7 +2243,7 @@
         event.target.classList.add("active");
       }
 
-      /* EVENTS CAROUSEL */
+      /* ══ EVENTS CAROUSEL ══ */
       let eventsPos = 0;
       const eventsTrack = document.getElementById("eventsTrack");
       function moveEvents(dir) {
@@ -1975,7 +2254,7 @@
         eventsTrack.style.transform = `translateX(${eventsPos}px)`;
       }
 
-      /* COUNTER ANIMATION */
+      /* ══ COUNTER ANIMATION ══ */
       function animateCounter(el) {
         const target = +el.getAttribute("data-target");
         const suffix = el.querySelector("span").textContent;
@@ -1988,13 +2267,12 @@
         }, 18);
       }
 
-      /* INTERSECTION OBSERVER */
+      /* ══ INTERSECTION OBSERVER ══ */
       const observer = new IntersectionObserver(
-        (entries) => {
+        (entries) =>
           entries.forEach((e) => {
             if (e.isIntersecting) e.target.classList.add("visible");
-          });
-        },
+          }),
         { threshold: 0.15 },
       );
       document
